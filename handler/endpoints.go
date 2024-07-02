@@ -40,7 +40,7 @@ func (s *Server) GetEstateIdDronePlan(ctx echo.Context, id string, params genera
 		maxDistance = *params.MaxDistance
 	}
 	calc := calculateDronePlan(estate.Data[0], trees.Data, maxDistance)
-	return ctx.JSON(http.StatusFound, calc)
+	return ctx.JSON(http.StatusOK, calc)
 }
 
 // GetEstateIdStats implements generated.ServerInterface.
@@ -66,7 +66,7 @@ func (s *Server) GetEstateIdStats(ctx echo.Context, id string) error {
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
 
-	return ctx.JSON(http.StatusAccepted, calculateStats(res))
+	return ctx.JSON(http.StatusOK, calculateStats(res))
 }
 
 // PostEstate implements generated.ServerInterface.
