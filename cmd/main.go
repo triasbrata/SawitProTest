@@ -21,7 +21,7 @@ func main() {
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func newServer() *handler.Server {
+func newServer() generated.ServerInterface {
 	dbDsn := os.Getenv("DATABASE_URL")
 	var repo repository.RepositoryInterface = repository.NewRepository(repository.NewRepositoryOptions{
 		Dsn: dbDsn,

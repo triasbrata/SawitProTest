@@ -1,58 +1,193 @@
-# This is the OpenAPI specification for your service. It is used to generate the client code.
-# To generate the server code, use the Gradle task `openApiGenerate`. The 
-# generated code will be placed in `build/generate-resources/main`.
-#
-# We will evaluate you based on how well you design your API.
-# 1. How well it follows REST principles.
-# 2. How easy it is to understand and use.
-#
-# References
-# 1. https://swagger.io/specification/
-openapi: "3.0.0"
+openapi: 3.0.0
 info:
+  title: Estate API
   version: 1.0.0
-  title: User Service
-  license:
-    name: MIT
-servers:
-  - url: http://localhost
 paths:
-  /hello:
-    get:
-      summary: This is just a test endpoint to get you started.
-      parameters:
-        - name: id
-          in: query
-          required: true
-          schema:
-            type: integer
+  /estate:
+    post:
+      summary: Create an estate
+      requestBody:
+        description: JSON payload to create an estate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EstateRequest'
       responses:
         '200':
-          description: Test return
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/HelloResponse"
-        '404':
-          description: Not found
+          description: Successfully created an estate
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/EstateResponseSuccess'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /estate/{id}/tree:
+    post:
+      summary: Add a tree to an estate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: JSON payload to add a tree
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TreeRequest'
+      responses:
+        '201':
+          description: Successfully added a tree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TreeResponseSuccess'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Estate not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /estate/{id}/stats:
+    get:
+      summary: Get statistics for an estate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstateStatsResponse'
+        '404':
+          description: Estate not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /estate/{id}/drone-plan:
+    get:
+      summary: Get drone plan for an estate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: max_distance
+          in: query
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successfully retrieved drone plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DronePlanResponseSuccess'
+        '404':
+          description: Estate not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    HelloResponse:
+    EstateRequest:
       type: object
       required:
-        - message
+        - width
+        - length
       properties:
-        message:
+        width:
+          type: integer
+          example: 100
+        length:
+          type: integer
+          example: 200
+    EstateResponseSuccess:
+      type: object
+      properties:
+        id:
           type: string
-          example: Hello, World!
+          example: "abc123"
+    TreeRequest:
+      type: object
+      required:
+        - x
+        - y
+        - height
+      properties:
+        x:
+          type: number
+          example: 1.0
+        y:
+          type: number
+          example: 2.0
+        height:
+          type: number
+          example: 3.0
+    TreeResponseSuccess:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "tree123"
+    EstateStatsResponse:
+      type: object
+      properties:
+        count:
+          type: number
+          example: 10
+        max:
+          type: number
+          example: 100.0
+        min:
+          type: number
+          example: 10.0
+        median:
+          type: number
+          example: 55.0
+    DronePlanResponseSuccess:
+      type: object
+      properties:
+        distance:
+          type: number
+          example: 50.0
+        rest:
+          type: object
+          properties:
+            x:
+              type: number
+              example: 1.0
+            y:
+              type: number
+              example: 2.0
     ErrorResponse:
       type: object
-      required:
-        - message
       properties:
+        success:
+          type: boolean
+          example: false
         message:
           type: string
+          example: "Invalid width or length"
