@@ -36,7 +36,6 @@ func TestApi(t *testing.T) {
 
 				// Send request
 				response, err := client.Do(request)
-				fmt.Printf("err: %v\n", err)
 				require.NoError(t, err)
 				defer response.Body.Close()
 
@@ -281,6 +280,7 @@ func ExpectGetDronePlanOk(distance int) ExpectFunc {
 }
 
 func RequireReturnIsUUID(t *testing.T, resp *http.Response, data map[string]any) {
+	fmt.Printf("data: %+v\n", data)
 	require.Equal(t, http.StatusOK, resp.StatusCode)
 	RequireIsUUID(t, data["id"].(string))
 }

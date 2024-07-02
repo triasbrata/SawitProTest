@@ -19,6 +19,7 @@ func (s *Server) GetEstateIdDronePlan(ctx echo.Context, id string, params genera
 		ID: id,
 	})
 	if err != nil {
+		ctx.Logger().Error(err)
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
 	if len(estate.Data) != 1 {
@@ -31,6 +32,7 @@ func (s *Server) GetEstateIdDronePlan(ctx echo.Context, id string, params genera
 	})
 
 	if err != nil {
+		ctx.Logger().Error(err)
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
 	maxDistance := -1
@@ -49,6 +51,7 @@ func (s *Server) GetEstateIdStats(ctx echo.Context, id string) error {
 		ID: id,
 	})
 	if err != nil {
+		ctx.Logger().Error(err)
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
 	if len(estate.Data) != 1 {
@@ -59,6 +62,7 @@ func (s *Server) GetEstateIdStats(ctx echo.Context, id string) error {
 		EstateID: id,
 	})
 	if err != nil {
+		ctx.Logger().Error(err)
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
 
@@ -83,15 +87,15 @@ func (s *Server) PostEstate(ctx echo.Context) error {
 	}
 	//transaction to database
 	c := ctx.Request().Context()
-	fmt.Printf("s.Repository: %v\n", s.Repository)
 	res, err := s.Repository.DoCreateEstate(c, repository.DoCreateEstateRequest{
 		Length: int64(input.Length),
 		Width:  int64(input.Width),
 	})
 	if err != nil {
+		ctx.Logger().Error(err)
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
-	return ctx.JSON(http.StatusAccepted, model.EstateResponseSuccess{ID: res.ID})
+	return ctx.JSON(http.StatusOK, model.EstateResponseSuccess{ID: res.ID})
 }
 
 // PostEstateIdTree implements generated.ServerInterface.
@@ -104,12 +108,32 @@ func (s *Server) PostEstateIdTree(ctx echo.Context, id string) error {
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: err.Error()})
 	}
+
 	if input.Height < 1 || input.Height > 30 {
 		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: "height of tree max is only 30"})
+	}
 
+	if input.X < 1 || input.Y < 1 {
+		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: "out of bound"})
+	}
+
+	c := ctx.Request().Context()
+	estate, err := s.Repository.GetEstate(c, repository.GetEstateRequest{
+		ID: id,
+	})
+
+	if err != nil {
+		ctx.Logger().Error(err)
+		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
+	}
+	if len(estate.Data) == 0 {
+		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusNotFound), Success: false, Message: "estate not found"})
+	}
+
+	if input.X > estate.Data[0].Length && input.Y > estate.Data[0].Width {
+		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: "out of bound"})
 	}
 	//transaction to database
-	c := ctx.Request().Context()
 	res, err := s.Repository.DoCreateTree(c, repository.DoCreateTreeRequest{
 		EstateID: id,
 		X:        input.X,
@@ -117,8 +141,9 @@ func (s *Server) PostEstateIdTree(ctx echo.Context, id string) error {
 		Height:   input.Height,
 	})
 	if err != nil {
+		ctx.Logger().Error(err)
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
-	return ctx.JSON(http.StatusAccepted, model.TreeResponseSuccess{ID: res.ID})
+	return ctx.JSON(http.StatusOK, model.TreeResponseSuccess{ID: res.ID})
 
 }

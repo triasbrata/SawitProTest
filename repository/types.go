@@ -6,7 +6,7 @@ type DoCreateEstateRequest struct {
 	Length int64 `db:"length"`
 }
 type DoCreateTreeRequest struct {
-	EstateID string `db:"id"`
+	EstateID string `db:"estate_id"`
 	X        int64  `db:"x"`
 	Y        int64  `db:"y"`
 	Height   int64  `db:"height"`
@@ -31,7 +31,7 @@ type GetEstateTreeResponse struct {
 	Data []Tree
 }
 type GetEstateRequest struct {
-	ID string `db:"string"`
+	ID string `db:"id"`
 }
 type GetEstateResponse struct {
 	Data []Estate

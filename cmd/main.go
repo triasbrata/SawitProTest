@@ -9,6 +9,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 )
 
 func main() {
@@ -17,7 +18,16 @@ func main() {
 	var server generated.ServerInterface = newServer()
 
 	generated.RegisterHandlers(e, server)
-	e.Use(middleware.Logger())
+	e.Logger.SetLevel(log.ERROR)
+	e.Use(
+		middleware.Logger(),
+		middleware.RecoverWithConfig(middleware.RecoverConfig{
+			StackSize: 1 << 10, // 1 KB
+			LogLevel:  log.ERROR,
+		}),
+		middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins: []string{"*"},
+		}))
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
