@@ -1,0 +1,4 @@
+package constants
+
+const MAX_ESTATE_WIDTH_LENGTH = 50000
+const MIN_ESTATE_WIDTH_LENGTH = 1

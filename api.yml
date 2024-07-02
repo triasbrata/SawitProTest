@@ -96,7 +96,7 @@ paths:
           in: query
           required: false
           schema:
-            type: number
+            type: integer
       responses:
         '200':
           description: Successfully retrieved drone plan
@@ -138,14 +138,14 @@ components:
         - height
       properties:
         x:
-          type: number
-          example: 1.0
+          type: integer
+          example: 1
         y:
-          type: number
-          example: 2.0
+          type: integer
+          example: 2
         height:
-          type: number
-          example: 3.0
+          type: integer
+          example: 3
     TreeResponseSuccess:
       type: object
       properties:
@@ -156,32 +156,32 @@ components:
       type: object
       properties:
         count:
-          type: number
+          type: integer
           example: 10
         max:
-          type: number
-          example: 100.0
+          type: integer
+          example: 100
         min:
-          type: number
-          example: 10.0
+          type: integer
+          example: 10
         median:
-          type: number
-          example: 55.0
+          type: integer
+          example: 55
     DronePlanResponseSuccess:
       type: object
       properties:
         distance:
-          type: number
-          example: 50.0
+          type: integer
+          example: 50
         rest:
           type: object
           properties:
             x:
-              type: number
-              example: 1.0
+              type: integer
+              example: 1
             y:
-              type: number
-              example: 2.0
+              type: integer
+              example: 2
     ErrorResponse:
       type: object
       properties:

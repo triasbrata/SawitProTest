@@ -6,10 +6,12 @@ require (
 	github.com/getkin/kin-openapi v0.117.0
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.5.0
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/lib/pq v1.10.9
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/stretchr/testify v1.9.0
+	github.com/triasbrata/golibs v0.0.0-20240702185401-05a6d608434f
 )
 
 require (
