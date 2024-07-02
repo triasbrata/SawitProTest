@@ -83,6 +83,7 @@ func (s *Server) PostEstate(ctx echo.Context) error {
 	}
 	//transaction to database
 	c := ctx.Request().Context()
+	fmt.Printf("s.Repository: %v\n", s.Repository)
 	res, err := s.Repository.DoCreateEstate(c, repository.DoCreateEstateRequest{
 		Length: int64(input.Length),
 		Width:  int64(input.Width),

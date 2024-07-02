@@ -15,6 +15,6 @@ type NewServerOptions struct {
 
 func NewServer(opts NewServerOptions) generated.ServerInterface {
 	return &Server{
-		Repository: nil,
+		Repository: opts.Repository,
 	}
 }

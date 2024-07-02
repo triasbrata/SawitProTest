@@ -36,7 +36,7 @@ func TestApi(t *testing.T) {
 
 				// Send request
 				response, err := client.Do(request)
-
+				fmt.Printf("err: %v\n", err)
 				require.NoError(t, err)
 				defer response.Body.Close()
 

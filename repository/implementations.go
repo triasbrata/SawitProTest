@@ -11,10 +11,13 @@ func (r *Repository) DoCreateEstate(ctx context.Context, input DoCreateEstateReq
 	if err != nil {
 		return DoCreateEstateResponse{}, err
 	}
-
-	err = r.Db.SelectContext(ctx, &output.ID, query, args...)
+	dbRes := make([]Estate, 0)
+	err = r.Db.SelectContext(ctx, &dbRes, query, args...)
 	if err != nil {
 		return DoCreateEstateResponse{}, err
+	}
+	if len(dbRes) > 0 {
+		output.ID = dbRes[0].ID
 	}
 	return
 
@@ -45,10 +48,14 @@ func (r *Repository) DoCreateTree(ctx context.Context, input DoCreateTreeRequest
 	if err != nil {
 		return DoCreateTreeResponse{}, err
 	}
+	dbRes := make([]Tree, 0)
 
-	err = r.Db.SelectContext(ctx, &output.ID, query, args...)
+	err = r.Db.SelectContext(ctx, &dbRes, query, args...)
 	if err != nil {
 		return DoCreateTreeResponse{}, err
+	}
+	if len(dbRes) > 0 {
+		output.ID = dbRes[0].ID
 	}
 	return
 }
