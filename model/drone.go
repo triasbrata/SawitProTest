@@ -1,7 +1,5 @@
 package model
 
-import "fmt"
-
 type SafeInt int
 
 func (a SafeInt) Abs() int {
@@ -108,18 +106,18 @@ func (d *Drone) IsRest() bool {
 	return !d.isRunning
 }
 func (d *Drone) State() {
-	fmt.Printf(`
-	====
-	drone state :
-		direction X: %s
-		direction Y: %s 
-		direction Z: %s
-		Pos(x,y,z): (%v,%v,%v) 
-		IsRest: %v 
-		maxDistance: %v  
-		distance: %v
-	
-	`, d.directionX, d.directionY, d.directionZ, d.X, d.Y, d.z, d.IsRest(), d.maxDistance, d.distance)
+	// fmt.Printf(`
+	// ====
+	// drone state :
+	// 	direction X: %s
+	// 	direction Y: %s
+	// 	direction Z: %s
+	// 	Pos(x,y,z): (%v,%v,%v)
+	// 	IsRest: %v
+	// 	maxDistance: %v
+	// 	distance: %v
+
+	// `, d.directionX, d.directionY, d.directionZ, d.X, d.Y, d.z, d.IsRest(), d.maxDistance, d.distance)
 }
 
 func InitDrone(distance ...int) *Drone {

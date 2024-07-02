@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"sort"
 
 	"github.com/SawitProRecruitment/UserService/constants"
@@ -41,17 +40,12 @@ func calculateDronePlan(estate repository.Estate, trees []repository.Tree, max_d
 			droneDirection = "left"
 			checkTreeY(drone, mapTree)
 			drone.Forward()
-
-			// fmt.Printf("\"break\": %v\n", "change direction to left")
-			// break
 		}
 		if drone.X == 1 && drone.Y > 1 {
 			droneDirection = "right"
 			checkTreeY(drone, mapTree)
 			drone.Forward()
 
-			// fmt.Printf("\"break\": %v\n", "change direction to right")
-			// break
 		}
 		if droneDirection == "left" {
 			checkTreeX(drone, mapTree, -1)
@@ -65,21 +59,14 @@ func calculateDronePlan(estate repository.Estate, trees []repository.Tree, max_d
 		}
 		//drone battery is low
 		if drone.IsRest() {
-			fmt.Printf("\"break\": %v\n", "because rest")
 			break
 		}
 		//end of estate
 		if drone.Y >= int(estate.Width) && drone.X >= int(estate.Length) {
-			fmt.Printf("\"break\": %v\n", "end of estate")
-			break
-		}
-		if drone.Y > 10 || drone.X > 10 {
-			fmt.Printf("\"break\": %v\n", "out of bound")
 			break
 		}
 		//out of bound
 		if drone.Y > constants.MAX_ESTATE_WIDTH_LENGTH || drone.X > constants.MAX_ESTATE_WIDTH_LENGTH || drone.X < constants.MIN_ESTATE_WIDTH_LENGTH || drone.Y < constants.MIN_ESTATE_WIDTH_LENGTH {
-			fmt.Printf("\"break\": %v\n", "out of bound")
 			break
 		}
 
@@ -106,7 +93,6 @@ func checkTreeY(drone *model.Drone, mapTree map[int]map[int]repository.Tree) {
 		tree, foundTree = treeX[drone.Y+1]
 		if safe {
 			drone.UpDown(model.SafeInt(tree.Height + 1))
-			fmt.Printf("tree h: %+v\n", tree)
 		}
 	}
 	if !foundTree {
@@ -118,9 +104,6 @@ func checkTreeX(drone *model.Drone, mapTree map[int]map[int]repository.Tree, mod
 	if nx < 1 {
 		nx = 1
 	}
-	fmt.Printf("nx: %v\n", nx)
-	fmt.Printf("drone.Y: %v\n", drone.Y)
-
 	var (
 		foundTree bool
 		tree      repository.Tree
@@ -130,7 +113,6 @@ func checkTreeX(drone *model.Drone, mapTree map[int]map[int]repository.Tree, mod
 		tree, foundTree = treeX[drone.Y]
 		if foundTree {
 			drone.UpDown(model.SafeInt(tree.Height + 1))
-			fmt.Printf("tree h: %+v\n", tree)
 		}
 	}
 	if !foundTree {

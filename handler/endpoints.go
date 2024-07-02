@@ -83,7 +83,7 @@ func (s *Server) PostEstate(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: fmt.Sprintf("%s of estate max is only %v and min is %v", "Width", constants.MAX_ESTATE_WIDTH_LENGTH, constants.MIN_ESTATE_WIDTH_LENGTH)})
 	}
 	if input.Length < constants.MIN_ESTATE_WIDTH_LENGTH || input.Length > constants.MAX_ESTATE_WIDTH_LENGTH {
-		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: fmt.Sprintf("%s of estate max is only %v and min is %v", "Leght", constants.MAX_ESTATE_WIDTH_LENGTH, constants.MIN_ESTATE_WIDTH_LENGTH)})
+		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: fmt.Sprintf("%s of estate max is only %v and min is %v", "Length", constants.MAX_ESTATE_WIDTH_LENGTH, constants.MIN_ESTATE_WIDTH_LENGTH)})
 	}
 	//transaction to database
 	c := ctx.Request().Context()
@@ -127,10 +127,10 @@ func (s *Server) PostEstateIdTree(ctx echo.Context, id string) error {
 		return ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{StatusCode: int64(http.StatusInternalServerError), Success: false, Message: err.Error()})
 	}
 	if len(estate.Data) == 0 {
-		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusNotFound), Success: false, Message: "estate not found"})
+		return ctx.JSON(http.StatusNotFound, model.ErrorResponse{StatusCode: int64(http.StatusNotFound), Success: false, Message: "estate not found"})
 	}
 
-	if input.X > estate.Data[0].Length && input.Y > estate.Data[0].Width {
+	if input.X > estate.Data[0].Length || input.Y > estate.Data[0].Width {
 		return ctx.JSON(http.StatusBadRequest, model.ErrorResponse{StatusCode: int64(http.StatusBadRequest), Success: false, Message: "out of bound"})
 	}
 	//transaction to database
